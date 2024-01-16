@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 데이터베이스 정보수집 : DataSource -->
+	<bean id="ds" class="org.apache.commons.dbcp.BasicDataSource"
+		p:driverClassName="oracle.jdbc.driver.OracleDriver"
+		p:url="jdbc:oracle:thin:@211.238.142.102:1521:XE"
+		p:username="hr"
+		p:password="happy"
+		p:maxActive="10"
+		p:maxIdle="10"
+		p:maxWait="-1"
+	/>
+	
+	<!-- 수집된 정보를 MyBatis로 전송 
+			=> SQL문장 저장 => getConnection(),disConnection()
+			=> SqlSessionFactoryBean
+	-->
+	<bean id="ssf" class="org.mybatis.spring.SqlSessionFactoryBean"
+		p:dataSource-ref="ds"
+	/>
+	
+	<!-- 
+			SqlSessionFactoryBean 객체를 전송
+			=> MapperFactoryBean (mapper => interface를 구현해 주는 클래스)
+	 -->
+	 <bean id="mapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+	 	p:sqlSessionFactory-ref="ssf"
+	 	p:mapperInterface="com.sist.dao.SeoulMapper"
+	 />
+	 
+	 <bean id="dao" class="com.sist.dao.SeoulDAO" 
+	 	p:mapper-ref="mapper"
+	 />
+	
+	<!-- 
+			new Legacy Project
+			properties - java version 1.8
+			pom.xml 수정
+			
+			ex) db에서 데이터 받아오기
+			com.sist.dao만들고
+			seoulVO , seoulDAO 만들기 => application.xml에서 dao에 mapper 메모리 할당 후 dao에서 mapper 가져다 씀
+			Interface SeoulMapper만들기 => SQL문장 들어감
+			vo에 변수설정하고 getter/setter
+			
+			classpath(src/main/java)에서 spring bean 파일 생성 (beans, p)
+			1. db연결 => DataSource => 보안을 위해 db.properties 사용 권장
+			2. 수집된 db정보를 mybatis에 전달 => SqlSessionFactoryBean => ssf
+			3. ssf를 Mapper 인터페이스에 전달
+				=> DAO에 전달하기전 DAO에서 받을 mapper변수 선언하고 setter 설정 **
+			4. mapper를 사용할 DAO에 전달
+			
+			Mapper 인터페이스에서 @Select 등 SQL 문장 생성 + 메소드 
+			
+			DAO에서 mapper에서 선언한 메소드 가져다 쓰기
+			
+			Main(요청값 받아서 출력)에서 ApplicationContext이용 Application.xml 읽기
+			getBean으로 등록된 DAO 가져오기
+			DAO 사용해서 출력
+			
+	 -->
+	
+	
+</beans>
