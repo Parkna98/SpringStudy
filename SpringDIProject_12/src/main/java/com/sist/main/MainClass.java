@@ -31,6 +31,11 @@ package com.sist.main;
 				@PreDestroy => destroy-method
 				
 		
+			DAO만들고 할당 @Repository
+			dao객체 메모리할당 했으므로 dao에 쓰는 mapper도 할당해야함 
+			dao에 mapper객체만들고 @Autowired로 메모리 할당
+		
+		
  */
 @Component
 class A{
