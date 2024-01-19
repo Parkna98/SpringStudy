@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- 클래스 메모리 할당 -->
+	<context:component-scan base-package="com.sist.*"/>
+	<!--
+		 component-scan으로 메모리 할당할수 있는 stereoType Annotation 
+		 @Component 
+		 @Repository
+		 @Service
+		 @Controller 
+		 @RestController
+		 @ControllerAdvice
+		 @Configuration  
+		 -->
+		 
+	<!-- 
+		 JSP를 찾는 클래스 설정
+		 	 .do
+		 요청 === DispatcherServlet
+		 			1. Model 클래스 => @RequestMapping
+		 				HandlerMapping (이미 설정된 상태 눈에 보이지 않음 => DispatcherServlet에 내장)
+		 					ㅣ request
+		 			2. ViewResolver => JSP를 찾는 역할 
+		 					ㅣ request
+		 				   JSP
+		 
+	 -->
+	 <!-- 
+	 		viewResolver 클래스가 경로와 확장자를 달아서 jsp를 찾아준다 
+	 		ex) return "list" 
+	 		/food/list.jsp 
+	 		-->
+	 
+	 <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+	 	p:prefix="/food/"
+	 	p:suffix=".jsp"
+	 />
+</beans>
