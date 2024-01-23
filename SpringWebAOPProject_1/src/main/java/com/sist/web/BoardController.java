@@ -24,8 +24,11 @@ public class BoardController {
 		map.put("start", (curpage*10)-9);
 		map.put("end", (curpage*10));
 		List<BoardVO> list=dao.boardListData(map);
-		int totalpage=dao.boardTotalPage();
+		int count=dao.boardTotalPage();
+		int totalpage=(int)(Math.ceil(count/10.0));
+		count=count-((curpage*10)-10);
 		
+		model.addAttribute("count",count);
 		model.addAttribute("list",list);
 		model.addAttribute("curpage",curpage);
 		model.addAttribute("totalpage",totalpage);
@@ -57,5 +60,21 @@ public class BoardController {
 		BoardVO vo=dao.boardUpdateData(no);
 		model.addAttribute("vo",vo);
 		return "board/update";
+	}
+	
+	// 답변
+	// 6번에서는 RequestMapping은 없고, getMapping과 postMapping
+	@RequestMapping("board/reply.do")
+	public String board_reply(int pno,Model model) {
+		
+		// JSP로 전송 => 전송객체 => request.setAttribute()
+		model.addAttribute("pno",pno);
+		return "board/reply";
+	}
+	
+	@RequestMapping("board/reply_ok.do")
+	public String board_reply_ok(int pno,BoardVO vo) {
+		dao.boardReplyInsert(pno, vo);
+		return "redirect:list.do";
 	}
 }

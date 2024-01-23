@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 import com.sist.dao.*;
 // RestController 
+// @ResponseBody => @RestController 
+// => 타 시스템과, 타언어(javascript...)와 연결 => RESTFUL
 @RestController
 public class BoardRestController {
 	@Autowired
@@ -26,5 +28,16 @@ public class BoardRestController {
 		}
 		return result;
 		
+	}
+	@RequestMapping("board/delete_ok.do")
+	public String board_delete(int no,String pwd) {
+		String result="";
+		boolean bCheck=dao.boardReplyDelete(no, pwd);
+		if(bCheck==true)
+			result="yes";
+		else 
+			result="no";
+		
+		return result;
 	}
 }

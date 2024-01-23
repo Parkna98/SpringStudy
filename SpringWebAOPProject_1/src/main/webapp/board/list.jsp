@@ -19,7 +19,7 @@
 </head>
 <body>
   <div class="container">
-  	<div class="col-sm-9">
+  	<div class="row">
   	  <h3 class="text-center">답변형 게시판</h3>
   	  <table class="table">
   	    <tr>
@@ -36,14 +36,31 @@
 		  <th width="15%" class="text-center">작성일</th>  	    
 		  <th width="10%" class="text-center">조회수</th>  	    
   	    </tr>
+  	    <c:set var="count" value="${count }"/>
   	    <c:forEach var="vo" items="${list }">
   	     <tr>
-		  <td width="10%" class="text-center">${vo.no}</td>  	    
-		  <td width="55%"><a href="detail.do?no=${vo.no}">${vo.subject }</a></td>  	    
+		  <td width="10%" class="text-center">${count }</td>  	    
+		  <td width="55%">
+		   	<c:if test="${vo.group_tab>0 }">
+		   	  <c:forEach var="i" begin="1" end="${vo.group_tab }">
+		   	    &nbsp;&nbsp;
+		   	  </c:forEach>
+		   	  <img src="re_icon.png">
+		   	</c:if>
+		   	<c:if test="${vo.subject=='관리자가 삭제한 게시물입니다.' }">
+		   	  <span style="color:gray">${vo.subject }</span>
+		   	</c:if>
+		   	<c:if test="${vo.subject!=='관리자가 삭제한 게시물입니다.' }">
+		     <a href="detail.do?no=${vo.no}">
+		  	   ${vo.subject }
+		  	 </a>
+		    </c:if>
+		  </td>  	    
 		  <td width="10%" class="text-center">${vo.name }</td>  	    
 		  <td width="15%" class="text-center">${vo.dbday }</td>  	    
 		  <td width="10%" class="text-center">${vo.hit }</td>  	    
   	     </tr>
+  	     <c:set var="count" value="${count-1 }"/>
   	    </c:forEach>
   	  </table>
   	  <table class="table">
@@ -56,16 +73,15 @@
   	        <input type="submit" value="검색" class="btn-sm btn-info">
   	      </td>
   	      <td class="text-right">
-  	        <a href="#" class="btn btn-sm btn-success">이전</a>
+  	        <a href="list.do?page=${curpage>1?curpage-1:curpage }" class="btn btn-sm btn-success">이전</a>
   	        ${curpage } page / ${totalpage } pages
-  	        <a href="#" class="btn btn-sm btn-success">다음</a>
+  	        <a href="list.do?page=${curpage<total?curpage+1:curpage }" class="btn btn-sm btn-success">다음</a>
   	      </td>
   	    </tr>
   	  </table>
   	</div>
-  	<div class="col-sm-3">
-  	  
-  	</div>
+  	<div style="height: 20px"></div>
+  	<jsp:include page="top.jsp"></jsp:include>
   </div>
 </body>
 </html>

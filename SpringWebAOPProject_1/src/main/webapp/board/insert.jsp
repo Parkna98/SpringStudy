@@ -18,7 +18,7 @@
 </head>
 <body>
   <div class="container">
-    <div class="col-sm-9">
+    <div class="row">
       <h3 class="text-center">글쓰기</h3>
       <form method="post" action="insert_ok.do">
       <table class="table">
@@ -55,9 +55,8 @@
       </table>
       </form>
     </div>
-    <div class="col-sm-3">
-    
-    </div>
+    <div style="height: 20px"></div>
+    <jsp:include page="top.jsp"></jsp:include>
   </div>
 </body>
 </html>
