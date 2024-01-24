@@ -2,7 +2,35 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-
+	<!-- 
+			DispatcherServlet ====== WebApplicationContext
+						 HandlerMapping : Model찾기 (Controller)
+						 		ㅣModel 
+						 	ViewResolver : JSP 찾기
+						 		ㅣrequest
+						 	   View (JSP)
+											
+										 HandlerMapping
+			1. 사용자 요청 (.do) => Controller ======> 요청처리(Model)
+								DispatcherServlet 		  ====== Controller
+								FrontController						ㅣ
+								요청 받기								ㅣ ViewResolver
+									ㅣ							   JSP
+							
+							WebApplication context
+			public class DispatcherServlet extends HttpServlet {
+				WebApplicationContext wc;
+				public void init(ServletConfig config)/
+				{
+					String path=config.getInitParameter("contextConfigLocation")
+					if(path==null)
+					{
+						path="/WEB=INF/<servlet-name>-servlet.xml"  ==> default 경로
+									   dispatcher-servlet.xml
+					}
+				}
+			}
+	 -->
 	<servlet>
      <servlet-name>dispatcher</servlet-name>
      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

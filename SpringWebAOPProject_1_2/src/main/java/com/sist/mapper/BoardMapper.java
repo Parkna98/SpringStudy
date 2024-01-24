@@ -1,6 +1,7 @@
 package com.sist.mapper;
 import java.util.*;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -44,7 +45,29 @@ public interface BoardMapper {
 			  +"name=#{name},subject=#{subject},content=#{content} "
 			  +"WHERE no=#{no}")
 	   public void boardUpdate(BoardVO vo);
-	   // 5. 삭제 => 트랜잭션 적용 
+	// 5. 삭제 => 트랜잭션 적용
+		// 5-1. 비밀번호 확인
+		// 위에 메소드 재사용
+		// 5-2. depth, root
+		@Select("SELECT depth,root "
+				+ "FROM springReplyBoard "
+				+ "WHERE no=#{no}")
+		public BoardVO boardDeleteInfoData(int no);
+		// 5-3. depth==0, depth!=0
+		@Delete("DELETE FROM springReplyBoard "
+				+ "WHERE no=#{no}")
+		public void boardReplyDelete(int no);
+		
+		@Update("UPDATE springReplyBoard SET "
+				+ "subject=#{subject},content=#{content} "
+				+ "WHERE no=#{no}")
+		public void boardReplyDeleteUpdate(BoardVO vo);
+		// delete / update 
+		// depth감소
+		@Update("UPDATE springReplyBoard SET "
+				+ "depth=depth-1 "
+				+ "WHERE no=#{no}")
+		public void boardDepthDecrement(int no);
 	   // 6. 답변 => 트랜잭션 적용 
 	   @Select("SELECT group_id,group_step,group_tab "
 	   		+ "FROM springReplyBoard "
