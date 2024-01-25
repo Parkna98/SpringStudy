@@ -48,6 +48,12 @@
     <div class="row">
       <h3>최근 방문 맛집</h3>
       <hr>
+      <c:if test="${count!=0 } "></c:if>
+        <c:forEach var="cvo" items="${cList}" varStatus="s">
+          <c:if test="${s.index<9 }">
+            <img src="https://www.menupan.com${cvo.poster }" style="width: 100px;height: 100px">
+          </c:if>
+        </c:forEach>
     </div>
   </div>
 </body>

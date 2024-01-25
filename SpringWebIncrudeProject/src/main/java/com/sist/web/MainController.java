@@ -7,7 +7,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.*;
 import com.sist.dao.*;
 import com.sist.vo.FoodVO;
-
+/*
+		1. MVC 동작
+			=> web.xml에 DispatcherServlet
+							= HandlerMapping : @Controller
+							= WebApplicationContext : 클래스 관리
+								=> @Autowired => getBean()을 쓸순있지만 Autowired가 간편,효율적
+		
+		2. 공통 에외처리 : @ControllerAdvice
+		
+		3. 인터셉트 사용 : preHandle(), afterCompletion()
+		
+		4. 메모리 할당 : Annotation
+		
+		5. AOP 
+		
+		6. Cookie / HttpSesiion
+		
+		7. RestController => JSON
+			
+		==> 면접 Q. DI / AOP / MVC
+		==> JSON, Rest ...
+			
+		============================================================ 기본과정
+		6. 고급
+			Validation, WebSocket, Security, Task(Betch)
+			Spring-Data
+ */
 @Controller
 public class MainController {
 	@Autowired
