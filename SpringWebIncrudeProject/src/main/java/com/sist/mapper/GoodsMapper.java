@@ -1,8 +1,11 @@
 package com.sist.mapper;
 import java.util.*;
 
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 /*
@@ -44,5 +47,25 @@ public interface GoodsMapper {
 			+ "WHERE goods_name LIKE '%'||#{ss}||'%'")
 	public int goodsAllFindTotalPage(Map map);
 	
-	
+	// 댓글
+	// 추가
+	@SelectKey(keyProperty = "no",resultType = int.class,before = true,statement = "SELECT NVL(MAX(no)+1,1) as no FROM goodsReply")
+	@Insert("INSERT INTO goodsReply VALUES("
+			+ "#{no},#{gno},#{type},#{id},#{name},#{msg},SYSDATE)")
+	public void goodsReplyInsert(GoodsReplyVO vo);
+	// 목록
+	@Select("SELECT no,gno,type,id,name,msg,TO_CHAR(regdate,'YYYY-MM-DD') as dbday "
+			+ "FROM goodsReply "
+			+ "WHERE #{gno}=gno AND #{type}=type "
+			+ "ORDER BY no DESC")
+	public List<GoodsReplyVO> goodsReplyListData(Map map);
+	// 수정
+	@Update("UPDATE goodsReply SET "
+			+ "msg=#{msg} "
+			+ "WHERE no=#{no}")
+	public void goodsReplyUpdate(GoodsReplyVO vo);
+	// 삭제
+	@Delete("DELETE FROM goodsReply "
+			+ "WHERE no=#{no}")
+	public void goodsReplyDelete(int no);
 }

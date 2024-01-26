@@ -48,11 +48,14 @@ import com.sist.vo.FoodVO;
 					=> form, ajax(type='post'), axios.post() ...
 				@RequestMapping => GET & POST
  */
+import com.sist.vo.ReplyVO;
 
 @Controller
 public class FoodController {
 	@Autowired
 	private FoodDAO dao;
+	@Autowired
+	private ReplyDAO rdao;
 	@GetMapping("food/detail_before.do")
 	public String food_detail_before(int fno,HttpServletResponse response,RedirectAttributes ra) {
 		// 값을 받을때는 HttpRequest, 쿠키를 전송해야하므로 response를 쓴다!!
@@ -72,6 +75,8 @@ public class FoodController {
 	@GetMapping("food/detail.do")
 	public String food_detail(int fno,Model model) {
 		FoodVO vo=dao.foodDetailData(fno);
+		List<ReplyVO> rList=rdao.replyListData(fno);
+		model.addAttribute("rList",rList);
 		model.addAttribute("vo",vo);
 		model.addAttribute("main_jsp","../food/detail.jsp");
 		return "main/main";

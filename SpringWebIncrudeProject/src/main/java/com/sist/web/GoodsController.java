@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -14,10 +15,13 @@ import java.util.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 @Controller
 public class GoodsController {
 	@Autowired
 	private GoodsDAO dao;
+	@Autowired
+	private GoodsReplyDAO rdao;
 	
 	String[] tab= {"","goods_all","goods_best","goods_special","goods_new"};
 	
@@ -71,7 +75,13 @@ public class GoodsController {
 		String tab_name=tab[type];
 		GoodsVO vo=dao.goodsAllDetailData(no,tab_name);
 		
+		Map map=new HashMap();
+		map.put("gno", no);
+		map.put("type", type);
+		List<GoodsReplyVO> rList=rdao.goodsReplyListData(map);
+		
 		model.addAttribute("vo",vo);
+		model.addAttribute("rList", rList);
 		model.addAttribute("main_jsp","../goods/detail.jsp");
 		model.addAttribute("type",type);
 		return "main/main";
@@ -119,4 +129,49 @@ public class GoodsController {
 		model.addAttribute("main_jsp","../goods/find.jsp");
 		return "main/main";
 	}
+	
+	@PostMapping("goods/reply_insert.do")
+	public String goods_reply_insert(int gno,int type,String msg,HttpSession session,RedirectAttributes ra) {
+		GoodsReplyVO vo=new GoodsReplyVO();
+		vo.setGno(gno);
+		vo.setType(type);
+		vo.setMsg(msg);
+		String id=(String)session.getAttribute("id");
+		String name=(String)session.getAttribute("name");
+		vo.setId(id);
+		vo.setName(name);
+		rdao.goodsReplyInsert(vo);
+		
+		ra.addAttribute("no",gno);
+		ra.addAttribute("type",type);
+		
+		
+		
+		return "redirect:../goods/detail.do";
+	}
+	
+	@PostMapping("goods/reply_update.do")
+	public String goods_reply_update(int gno, int no, int type, String msg, RedirectAttributes ra) {
+		GoodsReplyVO vo=new GoodsReplyVO();
+		vo.setMsg(msg);
+		vo.setNo(no);
+		rdao.goodsReplyUpdate(vo);
+		
+		ra.addAttribute("no",gno);
+		ra.addAttribute("type",type);
+		
+		return "redirect:../goods/detail.do";
+	}
+	
+	@GetMapping("goods/reply_delete.do")
+	public String goods_reply_delete(int gno, int no, int type, RedirectAttributes ra) {
+		rdao.goodsReplyDelete(no);
+		
+		ra.addAttribute("no",gno);
+		ra.addAttribute("type",type);
+		
+		return "redirect:../goods/detail.do";
+	}
+	
+	
 }
